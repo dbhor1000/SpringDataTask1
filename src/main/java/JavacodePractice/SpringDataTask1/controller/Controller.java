@@ -21,9 +21,6 @@ public class Controller {
     public ResponseEntity<?> fetchOneBook(@RequestBody BookDTO bookDTO) {
 
         BookEntity booksFound = bookService.getBookByNameAndYearAndAuthor(bookDTO);
-        if(booksFound == null){
-            return ResponseEntity.badRequest().build();
-        }
         return ResponseEntity.ok(booksFound);
     }
 
@@ -31,11 +28,6 @@ public class Controller {
     public ResponseEntity<BookEntity> newBook(@RequestBody BookDTO bookDTO) {
 
         BookEntity createdBook = bookService.createBook(bookDTO);
-
-        if(createdBook == null) {
-            return ResponseEntity.unprocessableEntity().build();
-        }
-
         return ResponseEntity.ok(createdBook);
     }
 
@@ -43,20 +35,13 @@ public class Controller {
     public ResponseEntity<BookEntity> updateBook(@RequestBody UpdateBookDto updateBookDTO) {
 
         BookEntity updatedBook = bookService.updateBook(updateBookDTO);
-
-        if(updatedBook == null) {
-            return ResponseEntity.badRequest().build();
-        }
-
         return ResponseEntity.ok(updatedBook);
     }
 
     @DeleteMapping()
     public ResponseEntity<?> deleteBook(@RequestBody BookDTO bookDTO) {
 
-        if (bookService.deleteBook(bookDTO)) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
+        bookService.deleteBook(bookDTO);
+        return ResponseEntity.ok().build();
     }
 }

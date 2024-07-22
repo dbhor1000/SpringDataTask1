@@ -2,6 +2,8 @@ package JavacodePractice.SpringDataTask1.service;
 
 import JavacodePractice.SpringDataTask1.DTO.BookDTO;
 import JavacodePractice.SpringDataTask1.DTO.UpdateBookDto;
+import JavacodePractice.SpringDataTask1.Excepion.BookAlreadyExistsException;
+import JavacodePractice.SpringDataTask1.Excepion.BookDoesNotExistException;
 import JavacodePractice.SpringDataTask1.model.BookEntity;
 import JavacodePractice.SpringDataTask1.repository.BookRepository;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,7 @@ public class BookServiceImpl implements BookService{
 
         public BookEntity createBook(BookDTO bookDTO) {
             if(bookRepository.getBookByTitleAuthorAndPublicationYear(bookDTO.getTitle(), bookDTO.getAuthor(), bookDTO.getPublicationYear()) != null){
-                return null;
+                throw new BookAlreadyExistsException("Book with provided details already exists.");
             }
 
             BookEntity book = new BookEntity(bookDTO.getAuthor(), bookDTO.getPublicationYear(), bookDTO.getTitle());
@@ -36,29 +38,32 @@ public class BookServiceImpl implements BookService{
         @Transactional
         public BookEntity updateBook(UpdateBookDto updateBookDto) {
 
-            BookEntity findBookToUpdate = bookRepository.getBookByTitleAuthorAndPublicationYear(updateBookDto.getOldTitle(), updateBookDto.getOldAuthor(), updateBookDto.getOldPublicationYear());
+            BookEntity bookToUpdate = bookRepository.getBookByTitleAuthorAndPublicationYear(updateBookDto.getOldTitle(), updateBookDto.getOldAuthor(), updateBookDto.getOldPublicationYear());
             BookEntity checkIfBookInfoIsOccupied = bookRepository.getBookByTitleAuthorAndPublicationYear(updateBookDto.getNewTitle(), updateBookDto.getNewAuthor(), updateBookDto.getNewPublicationYear());
 
-            if(findBookToUpdate == null || checkIfBookInfoIsOccupied != null) {
-                return null;
+            if(bookToUpdate == null) {
+                throw new BookDoesNotExistException("No book with provided details found to make an update.");
             }
 
-            findBookToUpdate.setAuthor(updateBookDto.getNewAuthor());
-            findBookToUpdate.setTitle(updateBookDto.getNewTitle());
-            findBookToUpdate.setPublicationYear(updateBookDto.getNewPublicationYear());
+            if(checkIfBookInfoIsOccupied != null) {
+                throw new BookAlreadyExistsException("New details for book update have already been used by another book.");
+            }
 
-            bookRepository.updateBook(findBookToUpdate);
-            return findBookToUpdate;
+            bookToUpdate.setAuthor(updateBookDto.getNewAuthor());
+            bookToUpdate.setTitle(updateBookDto.getNewTitle());
+            bookToUpdate.setPublicationYear(updateBookDto.getNewPublicationYear());
+
+            bookRepository.updateBook(bookToUpdate);
+            return bookToUpdate;
         }
 
         @Transactional
-        public boolean deleteBook(BookDTO bookDTO) {
+        public void deleteBook(BookDTO bookDTO) {
 
             if(bookRepository.getBookByTitleAuthorAndPublicationYear(bookDTO.getTitle(), bookDTO.getAuthor(), bookDTO.getPublicationYear()) == null){
-                return false;
+                throw new BookDoesNotExistException("Book to delete was not found.");
             }
             bookRepository.deleteBookByTitleAuthorAndPublicationYear(bookDTO.getTitle(), bookDTO.getAuthor(), bookDTO.getPublicationYear());
-            return true;
 
         }
 

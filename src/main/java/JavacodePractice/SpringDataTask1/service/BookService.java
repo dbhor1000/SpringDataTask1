@@ -12,6 +12,6 @@ public interface BookService {
     @Transactional
     public BookEntity updateBook(UpdateBookDto updateBookDto);
     @Transactional
-    public boolean deleteBook(BookDTO bookDTO);
+    public void deleteBook(BookDTO bookDTO);
 
 }
