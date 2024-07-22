@@ -1,6 +1,7 @@
 package JavacodePractice.SpringDataTask1.DTO;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class UpdateBookDto {
 
@@ -66,5 +67,18 @@ public class UpdateBookDto {
 
     public void setOldTitle(String oldTitle) {
         this.oldTitle = oldTitle;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UpdateBookDto that = (UpdateBookDto) o;
+        return Objects.equals(oldTitle, that.oldTitle) && Objects.equals(oldAuthor, that.oldAuthor) && Objects.equals(oldPublicationYear, that.oldPublicationYear) && Objects.equals(newTitle, that.newTitle) && Objects.equals(newAuthor, that.newAuthor) && Objects.equals(newPublicationYear, that.newPublicationYear);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(oldTitle, oldAuthor, oldPublicationYear, newTitle, newAuthor, newPublicationYear);
     }
 }

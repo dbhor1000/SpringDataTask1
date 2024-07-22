@@ -46,7 +46,7 @@ public class ControllerTests {
 
     @Test
     public void testFetchOneBook() throws Exception {
-        when(bookService.getBookByNameAndYearAndAuthor(any())).thenReturn(Optional.of(bookEntity));
+        when(bookService.getBookByNameAndYearAndAuthor(eq(bookDTO))).thenReturn(Optional.of(bookEntity));
 
         mockMvc.perform(get("/book")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -60,7 +60,7 @@ public class ControllerTests {
 
     @Test
     public void testNewBook() throws Exception {
-        when(bookService.createBook(any())).thenReturn(Optional.of(bookEntity));
+        when(bookService.createBook(eq(bookDTO))).thenReturn(Optional.of(bookEntity));
 
         mockMvc.perform(post("/book")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -74,7 +74,7 @@ public class ControllerTests {
 
     @Test
     public void testUpdateBook() throws Exception {
-        when(bookService.updateBook(any())).thenReturn(Optional.of(bookEntityUpdated));
+        when(bookService.updateBook(eq(updateBookDto))).thenReturn(Optional.of(bookEntityUpdated));
 
         mockMvc.perform(patch("/book")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -88,7 +88,7 @@ public class ControllerTests {
 
     @Test
     public void testDeleteBook() throws Exception {
-        when(bookService.deleteBook(any())).thenReturn(1L);
+        when(bookService.deleteBook(eq(bookDTO))).thenReturn(1L);
 
         mockMvc.perform(delete("/book")
                         .contentType(MediaType.APPLICATION_JSON)
