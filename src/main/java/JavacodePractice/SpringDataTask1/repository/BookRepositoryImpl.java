@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class BookRepositoryImpl implements BookRepository{
@@ -26,13 +27,13 @@ public class BookRepositoryImpl implements BookRepository{
     }
 
     // 2. Get/read a book by title+author+publicationYear
-    public BookEntity getBookByTitleAuthorAndPublicationYear(String title, String author, LocalDate publicationYear) {
+    public Optional<BookEntity> getBookByTitleAuthorAndPublicationYear(String title, String author, LocalDate publicationYear) {
         List<BookEntity> books = jdbcTemplate.query(
                 "SELECT * FROM books WHERE \"title\" = ? AND \"author\" = ? AND \"publicationYear\" = ?",
                 new Object[]{title, author, publicationYear},
                 new BookRowMapper()
         );
-        return books.isEmpty() ? null : books.get(0);
+        return books.isEmpty() ? Optional.empty() : Optional.of(books.get(0));
     }
 
     // 3. Update a book (title/author/publicationYear)

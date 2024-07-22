@@ -11,6 +11,15 @@ public class UpdateBookDto {
     private String newAuthor;
     private LocalDate newPublicationYear;
 
+    public UpdateBookDto(String newAuthor, LocalDate newPublicationYear, String newTitle, String oldAuthor, LocalDate oldPublicationYear, String oldTitle) {
+        this.newAuthor = newAuthor;
+        this.newPublicationYear = newPublicationYear;
+        this.newTitle = newTitle;
+        this.oldAuthor = oldAuthor;
+        this.oldPublicationYear = oldPublicationYear;
+        this.oldTitle = oldTitle;
+    }
+
     public String getNewAuthor() {
         return newAuthor;
     }

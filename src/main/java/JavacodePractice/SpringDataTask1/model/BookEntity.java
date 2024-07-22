@@ -23,6 +23,13 @@ public class BookEntity {
         this.title = title;
     }
 
+    public BookEntity(String author, Long id, LocalDate publicationYear, String title) {
+        this.author = author;
+        this.id = id;
+        this.publicationYear = publicationYear;
+        this.title = title;
+    }
+
     public Long getId() {
         return id;
     }

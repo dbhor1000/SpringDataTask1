@@ -8,6 +8,12 @@ public class BookDTO {
     private String author;
     private LocalDate publicationYear;
 
+    public BookDTO(String author, LocalDate publicationYear, String title) {
+        this.author = author;
+        this.publicationYear = publicationYear;
+        this.title = title;
+    }
+
     public String getAuthor() {
         return author;
     }

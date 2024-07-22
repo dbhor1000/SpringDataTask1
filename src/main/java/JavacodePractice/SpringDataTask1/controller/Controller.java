@@ -7,6 +7,8 @@ import JavacodePractice.SpringDataTask1.service.BookService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/book")
 public class Controller {
@@ -18,30 +20,27 @@ public class Controller {
     }
 
     @GetMapping
-    public ResponseEntity<?> fetchOneBook(@RequestBody BookDTO bookDTO) {
-
-        BookEntity booksFound = bookService.getBookByNameAndYearAndAuthor(bookDTO);
-        return ResponseEntity.ok(booksFound);
+    public ResponseEntity<BookEntity> fetchOneBook(@RequestBody BookDTO bookDTO) {
+        Optional<BookEntity> booksFound = bookService.getBookByNameAndYearAndAuthor(bookDTO);
+        return booksFound.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
     public ResponseEntity<BookEntity> newBook(@RequestBody BookDTO bookDTO) {
-
-        BookEntity createdBook = bookService.createBook(bookDTO);
-        return ResponseEntity.ok(createdBook);
+        Optional<BookEntity> createdBook = bookService.createBook(bookDTO);
+        return createdBook.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @PatchMapping()
     public ResponseEntity<BookEntity> updateBook(@RequestBody UpdateBookDto updateBookDTO) {
-
-        BookEntity updatedBook = bookService.updateBook(updateBookDTO);
-        return ResponseEntity.ok(updatedBook);
+        Optional<BookEntity> updatedBook = bookService.updateBook(updateBookDTO);
+        return updatedBook.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @DeleteMapping()
-    public ResponseEntity<?> deleteBook(@RequestBody BookDTO bookDTO) {
+    public ResponseEntity<Long> deleteBook(@RequestBody BookDTO bookDTO) {
 
-        bookService.deleteBook(bookDTO);
-        return ResponseEntity.ok().build();
+        Long bookDeleted = bookService.deleteBook(bookDTO);
+        return ResponseEntity.ok(bookDeleted);
     }
 }
